@@ -1,0 +1,7 @@
+# Standard JS files/dirs
+node_modules/
+
+# Build artifacts
+public/
+dist/
+.snowpack/

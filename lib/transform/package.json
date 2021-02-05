@@ -1,0 +1,15 @@
+{
+  "name": "@unca-acm/lib-transform",
+  "version": "0.0.1",
+  "description": "C library for performing data transformations using WebAssembly",
+  "main": "dist/index.js",
+  "scripts": {
+    "preinstall": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joshua Cooper",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  }
+}

@@ -1,0 +1,28 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "allowJs": true,
+        "esModuleInterop": true,
+        "lib": [
+            "ES2016",
+            "DOM",
+        ],
+        "target": "ES6",
+        "module": "CommonJS",
+        "jsx": "react-jsx",
+        // "baseUrl": "./src",
+        "moduleResolution": "Node",
+        "outDir": "./dist",
+        "watch": false,
+        "resolveJsonModule": true,
+    },
+    "include": [
+        "src/**/*.ts",
+    ],
+    "exclude": [
+        "view/**/*",
+        "lib/**/*",
+        "public/**/*",
+        "dist/**/*",
+    ]
+}

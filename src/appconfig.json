@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "port": 8000,
+        "build": false
+    },
+    "prod": {
+        "port": 443,
+        "build": true
+    }
+}
