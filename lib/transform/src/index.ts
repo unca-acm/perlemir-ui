@@ -4,7 +4,7 @@
 
 import HelloTransformer, { HelloTransformBuilder } from "./HelloTransform/HelloTransformer";
 
-type BinModule = "hello" | "test";
+type BinModule = "hello";
 
 export class TransformContext {
     private rootPath: string;
@@ -26,8 +26,7 @@ export class TransformContext {
      */
     public async HelloModule(): Promise<HelloTransformer> {
         // TODO: memoize the fetch/compile process
-        const bin: Promise<ArrayBuffer> = this.fetch("test");
-        const transform = await new HelloTransformBuilder(await bin).instantiate();
-        return transform.start();
+        const bin: Promise<ArrayBuffer> = this.fetch("hello");
+        return await new HelloTransformBuilder(await bin).instantiate();
     }
 }

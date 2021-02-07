@@ -41,6 +41,9 @@ export default class HelloTransformer extends ITransformer {
         imports.env["write_console"] = this.writeConsole.bind(this);
         this.sayHello = this.sayHello.bind(this);
         this.eventList = [];
+
+        // Start the instantiation process
+        this.start.apply(this);
     }
 
     private eventList: WriterCallback[];
@@ -54,7 +57,7 @@ export default class HelloTransformer extends ITransformer {
 
     private static textDecoder: TextDecoder = new TextDecoder("utf-8");
 
-    public start(): HelloTransformer {
+    protected start(): HelloTransformer {
         // TODO: find a better way to declare methods imported from WebAssembly.
         // For now, this is done with a static cast.
         this.instanceTask = <Promise<HelloTransformerInstance>>

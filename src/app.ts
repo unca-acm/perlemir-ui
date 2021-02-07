@@ -47,9 +47,6 @@ void async function Main() {
             lockfile: null
         });
     }
-    else {
-        console.log("PING");
-    }
 
     app.use('/', express.static('public'));
 

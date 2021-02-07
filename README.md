@@ -75,6 +75,8 @@ TODO: Add transform lib pipeline to install
 
 #### Running
 
+0. `npm install` to load dependencies
+
 1. `npm start` to start the local dev server
 
 2. `npm start:ui` to start the front end, without running the server
