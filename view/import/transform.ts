@@ -10,7 +10,7 @@ import { TransformContext } from "@unca-acm/lib-transform-local";
 
 let Context: TransformContext = null;
 
-const getTransform = async function(): Promise<() => number> {
+const getTransform = async function(): Promise<() => Promise<string>> {
     if (Context === null) {
         Context = new TransformContext('/bin');
     }

@@ -8,15 +8,19 @@ const WasmTest: React.FC = function() {
     React.useEffect(function() {
         // TODO: show off WASM build!
         getTransform()
-            .then(sayHello => setResult(sayHello().toString()))
-            .catch(() => setResult("IMPORT NOT AVAILABLE"));
+            .then(sayHello => sayHello())
+            .then(res => setResult(res))
+            .catch((err) => {
+                console.error(err);
+                setResult("IMPORT NOT AVAILABLE")
+            });
     }, [ setResult ]);
 
     return (
         <div>
-            <h1>Result:</h1>
-            {result}
-            <p>(If not available, you'll see an error. This is 100% normal!)</p>
+            <h1>WebAssembly says:</h1>
+            <h2>{result}</h2>
+            <p>(If not available, you'll see an error. This is normal.)</p>
         </div>
     );
 };
