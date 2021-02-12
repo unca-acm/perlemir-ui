@@ -1,0 +1,7 @@
+.ui-graph {
+    background-color: antiquewhite;
+}
+
+.ui-graph rect {
+    fill: dodgerblue;
+}
