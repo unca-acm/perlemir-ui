@@ -11,7 +11,7 @@ WASM_import void write_console(char *message, i32u message_length);
  */
 WASM_export void say_hello()
 {
-    char *message = "Hello, world!";
+    char *message = "Hello, world!!!!!!!";
     i32u size = 13;
     write_console(message, size);
 }
