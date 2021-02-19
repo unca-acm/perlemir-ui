@@ -1,11 +1,10 @@
-import { text } from "express";
 import { ITransformBuilder, ITransformer } from "../types";
 
 interface HelloTransformerExports {
     exports: {
         say_hello: () => void;
     };
-};
+}
 type HelloTransformerInstance = WebAssembly.Instance & HelloTransformerExports;
 
 export type WriterCallback = (message: string) => void;
@@ -13,21 +12,22 @@ export type WriterCallback = (message: string) => void;
 export class HelloTransformBuilder extends ITransformBuilder<HelloTransformer> {
     public async instantiate(): Promise<HelloTransformer> {
         const exe = await this.compileTask;
-        const memory = new WebAssembly.Memory({ initial: 2 });
-        const imports = this.getDefaultExports(memory);
+        const memory = new WebAssembly.Memory({initial: 2});
+        const imports = this.getDefaultImports(memory);
         return new HelloTransformer(exe, imports, memory);
     }
-    protected compile(bin: ArrayBuffer): Promise<WebAssembly.Module> {
-        return WebAssembly.compile(bin);
+    public async compile(bin: Promise<ArrayBuffer>): Promise<HelloTransformBuilder> {
+        this.compileTask = WebAssembly.compile(await bin);
+        return this;
     }
-    protected getDefaultExports(memory: WebAssembly.Memory): WebAssembly.Imports {
+    protected getDefaultImports(memory: WebAssembly.Memory): WebAssembly.Imports {
         return {
             env: {
                 memory,
             }
         };
     }
-};
+}
 
 export default class HelloTransformer extends ITransformer {
     private instanceTask: Promise<HelloTransformerInstance>;
@@ -83,4 +83,4 @@ export default class HelloTransformer extends ITransformer {
             instance.exports.say_hello();
         });
     }
-};
+}

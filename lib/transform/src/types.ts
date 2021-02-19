@@ -14,14 +14,10 @@ export abstract class ITransformer {
 }
 
 export abstract class ITransformBuilder<I extends ITransformer> {
-    protected compileTask: Promise<WebAssembly.Module>;
-    constructor(
-        bin: ArrayBuffer
-    ) {
-        this.compileTask = this.compile(bin);
-    }
+    protected compileTask: Promise<WebAssembly.Module>
+        = Promise.reject("Transform instance not found; compile a valid WebAssembly binary before instantiating");
 
     public abstract instantiate(): Promise<I>;
-    protected abstract compile(bin: ArrayBuffer): Promise<WebAssembly.Module>;
-    protected abstract getDefaultExports(memory: WebAssembly.Memory): WebAssembly.Imports;
+    public abstract compile(bin: Promise<ArrayBuffer>): Promise<WebAssembly.Module>;
+    protected abstract getDefaultImports(memory: WebAssembly.Memory): WebAssembly.Imports;
 }

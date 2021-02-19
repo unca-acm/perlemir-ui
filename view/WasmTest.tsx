@@ -1,19 +1,19 @@
 import React from 'react';
 
-import { getTransform } from "./import/transform";
+import { HelloTransformBuilder } from "@unca-acm/lib-transform";
 
 const WasmTest: React.FC = function() {
     const [result, setResult]: [string, (newResult: string) => void] = React.useState("");
 
     React.useEffect(function() {
-        // TODO: show off WASM build!
-        getTransform()
-            .then(sayHello => sayHello())
-            .then(res => setResult(res))
-            .catch((err) => {
-                console.error(err);
-                setResult("IMPORT NOT AVAILABLE")
-            });
+        const wasmTask = async function(bin: Promise<ArrayBuffer>): Promise<string> {
+            const lib = await new HelloTransformBuilder().compile(bin);
+            const transform = await lib.instantiate();
+            return await transform.sayHello();
+        };
+
+        const binFetch = fetch("/bin/hello.wasm").then(bin => bin.arrayBuffer());
+        wasmTask(binFetch).then(hello => setResult(hello));
     }, [ setResult ]);
 
     return (
