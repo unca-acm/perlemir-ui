@@ -1,12 +1,26 @@
 {
   "name": "@unca-acm/lib-transform",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unca-acm/perlemir-ui.git",
+    "directory": "lib/transform"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
   "version": "0.0.1",
   "description": "C library for performing data transformations using WebAssembly",
   "main": "dist/index.js",
   "scripts": {
     "postinstall": "tsc",
+    "build": "tsc && mkdir -p bin && make",
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "bin"
+  ],
   "author": "Joshua Cooper",
   "license": "MIT",
   "devDependencies": {
