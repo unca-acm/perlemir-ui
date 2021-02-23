@@ -13,14 +13,14 @@ Wraps around the bot's API and configuration to provide a simple, out-of-the-box
     - [ ] Basic navbar
     - [ ] Visual graph (Plotly.js? D3.js? WebGL?)
     - [ ] Interactive elements (buttons, forms, sliders, etc)
-- [ ] Build pipeline for transform library
-    - [ ] Makefile/CMake/etc., along with LLVM compiler flags
+- [X] Build pipeline for transform library
+    - [X] Makefile/CMake/etc., along with LLVM compiler flags
         - `--import-memory`, `--export-all`, etc
-    - [ ] Publish as NPM package (include as dependency)
-    - [ ] Integrate WASI?
-- [ ] Data component for JavaScript
+    - [X] Publish as NPM package (include as dependency)
+    - [X] Integrate WASI?
+- [X] Data component for JavaScript
     - [ ] Interface for UI to pull from and query against
-    - [ ] Include transform library
+    - [X] Include transform library
 
 ### Layout
 
@@ -67,11 +67,9 @@ This is currently just a skeleton of a project; a more advanced build toolchain 
 
 Make sure the following tools are installed:
 
-1. Node.js v14.0+
+1. Node.js v14.0+ (if using NVM, run `nvm use` in repository root)
 
-2. NPM
-
-TODO: Add transform lib pipeline to install
+2. NPM v6.14+
 
 #### Running
 
@@ -84,3 +82,18 @@ TODO: Add transform lib pipeline to install
 3. `npm build` to create a production build for both client and server
 
 4. Open to `http://localhost:8000`
+
+#### Transform Library
+
+In order to develop for the transform library locally, you'll need to use the package located in `lib/transform` instead of the published NPM package. To do this, use the [npm link](https://docs.npmjs.com/cli/v6/commands/npm-link) command.
+
+##### Linking to Local Package
+
+1. Change to `lib/transform` directory.
+2. Run `npm link` to create a global reference to the local package.
+3. Return to the root directory of the repository.
+4. Run `npm link @unca-acm/lib-transform`.
+
+##### Running Local Package
+
+To rebuild, use `npm run build`.
