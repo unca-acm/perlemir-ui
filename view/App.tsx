@@ -6,9 +6,15 @@ import { DataStore, DataView } from "./data/DataContext";
 
 const App: React.FC = function() {
     const plotSize = { width: 1200, height: 400 };
+
+    // Run the wasmTest function if it's available
+    // Only run once, on the initial render
+    React.useEffect(function() {
+        WasmTest().then(async func => await func());
+    }, []);
+
     return (
         <DataStore>
-            <WasmTest />
             <DataView>
                 {({ data }) => (
                     <PriceVisualizer priceData={data} plotSize={plotSize}/>
