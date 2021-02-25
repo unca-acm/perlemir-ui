@@ -1,34 +1,49 @@
 import { ITransformBuilder, ITransformer } from "../types";
 
-interface HelloTransformerExports {
+interface StatisticTransformerExports {
     exports: {
         say_hello: () => void;
     };
 }
-type HelloTransformerInstance = WebAssembly.Instance & HelloTransformerExports;
+type StatisticTransformerInstance = WebAssembly.Instance & StatisticTransformerExports;
 
-export class HelloTransformBuilder extends ITransformBuilder<HelloTransformer> {
-    public async instantiate(): Promise<HelloTransformer> {
+export default class StatisticTransformBuilder extends ITransformBuilder<StatisticTransformer> {
+    private memSize: WebAssembly.Global = null;
+
+    public async instantiate(): Promise<StatisticTransformer> {
         const exe = await this.compileTask;
         const memory = new WebAssembly.Memory({ initial: 2 });
         const imports = this.getDefaultImports(memory);
-        return new HelloTransformer(exe, imports, memory);
+        return new StatisticTransformer(exe, imports, memory);
     }
-    public async compile(bin: Promise<ArrayBuffer>): Promise<HelloTransformBuilder> {
+
+    public async compile(bin: Promise<ArrayBuffer>): Promise<StatisticTransformBuilder> {
         this.compileTask = WebAssembly.compile(await bin);
         return this;
     }
+
+    public setMemSize(bytes: number): StatisticTransformBuilder {
+        // TODO: validate the number of bytes specified
+        this.memSize = new WebAssembly.Global({ value: 'i32', mutable: false }, bytes);
+        return this;
+    }
+
     protected getDefaultImports(memory: WebAssembly.Memory): WebAssembly.Imports {
+        if (!this.memSize) {
+            this.memSize = new WebAssembly.Global({ value: 'i32', mutable: false }, 1024);
+        }
+
         return {
             env: {
                 memory,
-            }
+                "__private_heap_base": this.memSize,
+            },
         };
     }
 }
 
-export default class HelloTransformer extends ITransformer {
-    private instanceTask: Promise<HelloTransformerInstance>;
+export class StatisticTransformer extends ITransformer {
+    private instanceTask: Promise<StatisticTransformerInstance>;
 
     constructor(
         exe: WebAssembly.Module,
@@ -36,23 +51,14 @@ export default class HelloTransformer extends ITransformer {
         rawMemory: WebAssembly.Memory
     ) {
         super(exe, rawMemory);
-        imports.env["write_console"] = this.writeConsole.bind(this);
-        this.sayHello = this.sayHello.bind(this);
+        this.getOrderStatistic = this.getOrderStatistic.bind(this);
 
         // Start the instantiation process
         this.start.apply(this);
     }
 
-    private writeConsole(messagePtr: number, messageLength: number) {
-        const rawMessage = new Uint8Array(this.rawMemory.buffer, messagePtr, messageLength);
-        const message = HelloTransformer.textDecoder.decode(rawMessage);
-        console.log(message);
-    }
-
-    private static textDecoder: TextDecoder = new TextDecoder("ascii");
-
-    protected start(): HelloTransformer {
-        this.instanceTask = WebAssembly.instantiate(this.module, this.imports) as Promise<HelloTransformerInstance>;
+    protected start(): StatisticTransformer {
+        this.instanceTask = WebAssembly.instantiate(this.module, this.imports) as Promise<StatisticTransformerInstance>;
         return this;
     }
 
@@ -60,14 +66,7 @@ export default class HelloTransformer extends ITransformer {
      ******* WASM-DEFINED METHODS *******
      ************************************/
 
-    /**
-     * Calls a WebAssembly function which writes a message to the console.
-     * Additionally resolves the given
-     *
-     * @returns Promise which resolves to the WebAssembly module's message.
-     */
-    public async sayHello(): Promise<void> {
-        const instance = await this.instanceTask;
-        instance.exports.say_hello();
+    public async getOrderStatistic(orderStatistic: number): Promise<number> {
+        return -1;
     }
 }
