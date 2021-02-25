@@ -1,13 +1,14 @@
 import React from 'react';
 import { select } from 'd3';
+import { scaleLinear } from 'd3-scale';
+import { extent } from 'd3-array';
+import { line } from 'd3-shape';
 
+import { BaseData } from "../../data/types";
 import './graph.css';
 
-// TODO: modify this type once we know the data shape
-type PriceData = Uint32Array | number[];
-
 interface PriceVisualizerProps {
-    priceData: PriceData;
+    priceData: BaseData;
     plotSize: { width: number, height: number };
 }
 
@@ -23,19 +24,38 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
     // "canvas" does not exist until AFTER the component is rendered!
     // As such, painting to the canvas needs to be registered as a side-effect.
     React.useEffect(function() {
-        const canvas = canvasHandle.current;
-        const barWidth = Math.floor(plotSize.width / priceData.length);
+        if (priceData) {
+            const canvas = canvasHandle.current;
 
-        // Apply new data to the chart
-        select(canvas)
-            .selectAll('rect')
-            .data(priceData)
-            .enter()
-            .append('rect')
-            .attr('x', (d, i) => (barWidth * i))
-            .attr('y', d => plotSize.height - d)
-            .attr('width', barWidth)
-            .attr('height', d => d);
+            // Apply new data to the chart
+            const axisX = scaleLinear()
+                .domain([ 0, priceData.length ])
+                .range([ 0, plotSize.width ]);
+
+            const axisY = scaleLinear()
+                .domain(extent(priceData))
+                .range([ plotSize.height, 0 ]);
+
+            const priceParser = function*(data: BaseData): Iterable<[number, number]> {
+                for (const priceEntry of data.entries()) {
+                    yield priceEntry;
+                }
+            };
+
+            const path = line()
+                .x(d => axisX(d[0]))
+                .y(d => axisY(d[1]));
+
+            select(canvas)
+                .append("path")
+                .datum(priceData)
+                .attr("fill", "none")
+                .attr("stroke", "#FF0000")
+                .attr("stroke-width", 1.5)
+                .attr("d", path(
+                    priceParser(priceData)
+                ));
+        }
     }, [ canvasHandle, priceData ]);
 
 

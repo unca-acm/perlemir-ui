@@ -4,7 +4,7 @@ import React from 'react';
  */
 
 // Array representing "under-the-hood" data.
-export type BaseData = Uint32Array | number[];
+export type BaseData = Float32Array | number[];
 
 // Data Store context types
 interface StoragePropDefinitions {
