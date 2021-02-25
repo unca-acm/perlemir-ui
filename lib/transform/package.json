@@ -9,7 +9,7 @@
     "registry": "https://npm.pkg.github.com",
     "access": "public"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "C library for performing data transformations using WebAssembly",
   "main": "dist/index.js",
   "scripts": {
@@ -19,7 +19,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
-    "bin"
+    "bin",
+    "dist",
+    "README.md"
   ],
   "author": "Joshua Cooper",
   "license": "MIT",
