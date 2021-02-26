@@ -1,11 +1,11 @@
 import React from 'react';
 import WasmTest from './WasmTest';
 
-import { PriceVisualizer } from './dashboard/graph';
+import { PriceVisualizer } from './dashboard/graph/Visualizers';
 import { DataStore, DataView } from "./data/DataContext";
 
 const App: React.FC = function() {
-    const plotSize = { width: 1200, height: 400 };
+    const plotSize = { width: 600, height: 400 };
 
     // Run the wasmTest function if it's available
     // Only run once, on the initial render
@@ -16,8 +16,10 @@ const App: React.FC = function() {
     return (
         <DataStore>
             <DataView>
-                {({ data }) => (
-                    <PriceVisualizer priceData={data} plotSize={plotSize}/>
+                {({ dataBlock }) => (
+                    <PriceVisualizer
+                        priceData={dataBlock["historical"]}
+                        plotSize={plotSize}/>
                 )}
             </DataView>
             <p>If you are intending to work with the transform library, you'll need to install:

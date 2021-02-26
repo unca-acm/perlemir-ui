@@ -2,7 +2,7 @@ import React from 'react';
 import * as Data from './types';
 
 const DataContext: React.Context<Data.StorageContext> = React.createContext({
-    data: null,
+    dataBlock: null,
     query: (target: Data.BaseData) => null,
     transform: (target: Data.BaseData) => null,
 });
@@ -10,7 +10,6 @@ const DataContext: React.Context<Data.StorageContext> = React.createContext({
 const parseCoinbaseResponse = async function(apiResponse: Response): Promise<Data.BaseData> {
     try {
         const { prices } = (await apiResponse.json()).data;
-
         const data = new Float32Array(prices.length);
         for (const [index, priceEntry] of prices.entries()) {
             data[index] = parseFloat(priceEntry.price);
@@ -25,16 +24,22 @@ const parseCoinbaseResponse = async function(apiResponse: Response): Promise<Dat
 
 /* DATA STORE */
 export const DataStore: Data.Storage = function(props) {
-    const [ priceData, setPriceData ] = React.useState<Data.BaseData>(null);
+    const [ priceData, setPriceData ] = React.useState<Data.DataBlockIndex>({
+        "historical": null,
+    });
 
     React.useEffect(function() {
         fetch(`https://api.coinbase.com/v2/prices/BTC-USD/historic?days=30`)
             .then(res => parseCoinbaseResponse(res))
-            .then(data => setPriceData(data));
+            .then(data => setPriceData({
+                historical: {
+                    data
+                }
+            }));
     }, []);
 
     return (
-        <DataContext.Provider value={{ data: priceData, query: null, transform: null }}>
+        <DataContext.Provider value={{ dataBlock: priceData, query: null, transform: null }}>
             {props.children}
         </DataContext.Provider>
     );
