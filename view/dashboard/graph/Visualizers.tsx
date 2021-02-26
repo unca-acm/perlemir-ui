@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from 'd3';
-import { scaleLinear } from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisBottom, axisRight } from 'd3-axis';
@@ -43,6 +43,10 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 .domain(extent(priceData.data))
                 .range([ plotSize.height, padding.y ]);
 
+            const timeScale = scaleTime()
+                .domain(extent(priceData.domain))
+                .range([ padding.x, plotSize.width ]);
+
             const priceParser = function*(data: BaseData): Iterable<[number, number]> {
                 for (const priceEntry of data.entries()) {
                     yield priceEntry;
@@ -64,7 +68,7 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 ));
 
             // Add axis grids
-            const axisX = axisBottom(scaleX);
+            const axisX = axisBottom(timeScale);
             const axisY = axisRight(scaleY);
             graph.append("g")
                 .call(axisX);
