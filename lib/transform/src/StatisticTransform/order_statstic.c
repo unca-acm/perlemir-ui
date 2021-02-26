@@ -68,3 +68,22 @@ i32 partition(f32* array, i32 start, i32 end)
     array[end] = temp;
     return i + 1;
 }
+
+/**
+	 * Same as the regular partition, except that the pivot element is chosen at random.
+	 * To do this, a random integer in the range of the array indices is chosen, then the element at this index is switched with the last element in that portion of the array.
+	 * After that the normal partition method is called.
+	 * param array: an array of ints
+	 * param start: the starting index (inclusive)
+	 * param end: the ending index (inclusive)
+	 * return: index of the sorted element
+	 */
+i32 randomPartition(i32* array, i32 start, i32 end)
+{
+    Random rand = new Random();
+    i32 i = rand.nextInt(end - start) + start;
+    f32 temp = array[end];
+    array[end] = array[i];
+    array[i] = temp;
+    return partition(array, start, end);
+}
