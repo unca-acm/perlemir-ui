@@ -74,6 +74,41 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 .call(axisX);
             graph.append("g")
                 .call(axisY);
+
+            // If the user's mouse is currently pointing into the graph, illustrate the point.
+            const point = canvas.createSVGPoint();
+            const handleMouseOver = function(data) {
+                point.x = data.x;
+                point.y = scaleX.invert(point.x);
+
+                // Calculate the mouse position; however, the "y" position is not final.
+                // The "y" position needs to follow the graph, so we calculate it afterward.
+                // Matrix transform is done first so that we have proper portions.
+                const mousePosition = point.matrixTransform(canvas.getScreenCTM().inverse());
+
+                // Calculate the "true" y-coordinate, which is the price value at x.
+                const dataValue = priceData.data[mousePosition.y.toFixed(0)];
+                // Scale it to match the size of the canvas.
+                mousePosition.y = scaleY(dataValue);
+
+                // Old circles are removed; this prevents having a "trail" of circles.
+                graph.selectAll("circle").remove();
+
+                // Draw the new circle at the calculated mouse position.
+                graph.append("circle")
+                    .attr("cx", mousePosition.x)
+                    .attr("cy", mousePosition.y)
+                    .attr("r", 4);
+            }
+
+            // Remove any remaining circles after the mouse leaves.
+            const handleMouseOut = function() {
+                graph.selectAll("circle").remove();
+            }
+
+            // Attach handlers based on mouse events.
+            graph.on("mousemove", handleMouseOver);
+            graph.on("mouseleave", handleMouseOut);
         }
     }, [ canvasHandle, priceData ]);
 
