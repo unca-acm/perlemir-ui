@@ -1,5 +1,6 @@
 #include "jswasm.h"
 #include "perlemir.h"
+// #include <stdlib.h>
 
 // WASM_import void *stack_malloc(i32u bytes, i32 private);
 
@@ -12,6 +13,7 @@ WASM_export f32 quickSelect(f32* A, i32 i, i32 length) {
 
 f32* copy(f32* a, i32 length){
     f32* cpy = (f32*) stack_malloc(length*4, 1);
+    // f32* cpy = (f32*) malloc(length*4); //just for testing
     for (i32 i = 0; i < length; i++){
         cpy[i] = a[i];
     }
@@ -81,14 +83,14 @@ i32 partition(f32* array, i32 start, i32 end)
 	 */
 i32 randomPartition(f32* array, i32 start, i32 end)
 {
-    i32 i = random(23452345, end - start) + start;
+    i32 i = dumb_random(23452345, end - start) + start;
     f32 temp = array[end];
     array[end] = array[i];
     array[i] = temp;
     return partition(array, start, end);
 }
 
-i32u random(i32u seed, i32u range){
+i32u dumb_random(i32u seed, i32u range){
     return ((48271 * seed) % 2147483647) % range;
 }
 

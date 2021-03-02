@@ -19,6 +19,6 @@ i32 partition(f32 *, i32 , i32 );
 
 i32 randomPartition(f32 *, i32 , i32 );
 
-i32u random(i32u , i32u );
+i32u dumb_random(i32u , i32u );
 
 #endif
