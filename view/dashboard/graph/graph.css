@@ -1,7 +1,9 @@
 .ui-graph {
-    background-color: antiquewhite;
+    background-color: whitesmoke;
 }
 
-.ui-graph rect {
-    fill: dodgerblue;
+.ui-graph .ui-graph-path {
+    fill: none;
+    stroke-width: 1.5px;
+    stroke: crimson;
 }
