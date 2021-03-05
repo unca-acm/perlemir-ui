@@ -53,9 +53,7 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                     yield priceEntry;
                 }
             };
-            const mouseOver = () => {
-                console.log("DiPWuZhErE");
-            }
+            
             const path = line()
                 .x(d => scaleX(d[0]))
                 .y(d => scaleY(d[1]));
@@ -124,7 +122,9 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
         <div>
         
         <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
-        <h1>{price}</h1>
+        
+        <br></br>
+        Price:{price}<button id="button">Pump it!</button>
         </div>
     );
 };

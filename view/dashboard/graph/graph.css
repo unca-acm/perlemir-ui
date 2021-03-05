@@ -7,3 +7,9 @@
     stroke-width: 1.5px;
     stroke: crimson;
 }
+
+#button {
+    background-color: #4CAF50;
+    display: inline-block;
+    margin-left: 200px;
+}
