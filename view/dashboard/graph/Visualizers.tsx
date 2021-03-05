@@ -64,20 +64,29 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
 
             const graph = select(canvas);
             // Paint Graph onto the canvas
-            graph
+            // Initiate path with data
+            const pricePath = graph.selectAll("path")
+                .data([ priceData.data ])
+                // Styling attached to path is derived from CSS rather than being added manually
+                .enter()
                 .append("path")
-                .datum(priceData)
                 .attr("class", "ui-graph-path")
-                .attr("d", path(
-                    priceParser(priceData.data)
-                ));
+                .attr("d", path(priceParser(priceData.data)));
 
-            // Add axis grids
+            // Define data/domain for axes
             const axisX = axisBottom(timeScale);
             const axisY = axisRight(scaleY);
-            graph.append("g")
+            // Attach axes to graph
+            const graphAxes = graph.selectAll("g");
+            graphAxes
+                .data([ priceData.data ])
+                .enter()
+                .append("g")
                 .call(axisX);
-            graph.append("g")
+            graphAxes
+                .data([ priceData.domain ])
+                .enter()
+                .append("g")
                 .call(axisY);
             
             // If the user's mouse is currently pointing into the graph, illustrate the point.
@@ -116,14 +125,18 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
             // Attach handlers based on mouse events.
             graph.on("mousemove", handleMouseOver);
             graph.on("mouseleave", handleMouseOut);
-            
+
+            // Function which cleans up D3 points on unmount
+            return function() {
+                pricePath.exit().remove();
+            };
         }
     }, [ canvasHandle, priceData, price ]);
 
     return (
         <div>
-        <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
-        <h1>{price}</h1>
+            <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
+            <h1>{price}</h1>
         </div>
     );
 };
