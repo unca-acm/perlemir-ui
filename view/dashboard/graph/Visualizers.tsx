@@ -16,6 +16,7 @@ interface PriceVisualizerProps {
 const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Element {
     const { priceData } = props;
     const { plotSize } = props;
+    const [price, setPrice] = React.useState(0.0);
 
     // React and D3.js both operate over the DOM, which creates conflicts.
     // As such, the "canvas" should be modified using a handle (ref).
@@ -52,10 +53,14 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                     yield priceEntry;
                 }
             };
-
+            const mouseOver = () => {
+                console.log("DiPWuZhErE");
+            }
             const path = line()
                 .x(d => scaleX(d[0]))
                 .y(d => scaleY(d[1]));
+
+            
 
             const graph = select(canvas);
             // Paint Graph onto the canvas
@@ -74,12 +79,13 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 .call(axisX);
             graph.append("g")
                 .call(axisY);
-
+            
             // If the user's mouse is currently pointing into the graph, illustrate the point.
             const point = canvas.createSVGPoint();
             const handleMouseOver = function(data) {
                 point.x = data.x;
                 point.y = scaleX.invert(point.x);
+                // price = data.y;
 
                 // Calculate the mouse position; however, the "y" position is not final.
                 // The "y" position needs to follow the graph, so we calculate it afterward.
@@ -99,6 +105,7 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                     .attr("cx", mousePosition.x)
                     .attr("cy", mousePosition.y)
                     .attr("r", 4);
+                setPrice(dataValue);
             }
 
             // Remove any remaining circles after the mouse leaves.
@@ -109,11 +116,15 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
             // Attach handlers based on mouse events.
             graph.on("mousemove", handleMouseOver);
             graph.on("mouseleave", handleMouseOut);
+            
         }
-    }, [ canvasHandle, priceData ]);
+    }, [ canvasHandle, priceData, price ]);
 
     return (
+        <div>
         <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
+        <h1>{price}</h1>
+        </div>
     );
 };
 
