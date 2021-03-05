@@ -16,7 +16,7 @@ interface PriceVisualizerProps {
 const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Element {
     const { priceData } = props;
     const { plotSize } = props;
-    const [price, setPrice] = React.useState(0.0);
+    const [price, setPrice] = React.useState("");
 
     // React and D3.js both operate over the DOM, which creates conflicts.
     // As such, the "canvas" should be modified using a handle (ref).
@@ -99,13 +99,13 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
 
                 // Old circles are removed; this prevents having a "trail" of circles.
                 graph.selectAll("circle").remove();
-
+                const formatPrice = dataValue.toFixed(2)
                 // Draw the new circle at the calculated mouse position.
                 graph.append("circle")
                     .attr("cx", mousePosition.x)
                     .attr("cy", mousePosition.y)
                     .attr("r", 4);
-                setPrice(dataValue);
+                setPrice(`$${formatPrice}`);
             }
 
             // Remove any remaining circles after the mouse leaves.
@@ -122,6 +122,7 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
 
     return (
         <div>
+        
         <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
         <h1>{price}</h1>
         </div>
