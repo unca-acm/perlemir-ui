@@ -7,8 +7,6 @@ interface HelloTransformerExports {
 }
 type HelloTransformerInstance = WebAssembly.Instance & HelloTransformerExports;
 
-export type WriterCallback = (message: string) => void;
-
 export class HelloTransformBuilder extends ITransformBuilder<HelloTransformer> {
     public async instantiate(): Promise<HelloTransformer> {
         const exe = await this.compileTask;
@@ -40,28 +38,21 @@ export default class HelloTransformer extends ITransformer {
         super(exe, rawMemory);
         imports.env["write_console"] = this.writeConsole.bind(this);
         this.sayHello = this.sayHello.bind(this);
-        this.eventList = [];
 
         // Start the instantiation process
         this.start.apply(this);
     }
 
-    private eventList: WriterCallback[];
-
     private writeConsole(messagePtr: number, messageLength: number) {
         const rawMessage = new Uint8Array(this.rawMemory.buffer, messagePtr, messageLength);
         const message = HelloTransformer.textDecoder.decode(rawMessage);
-        this.eventList.forEach(event => event(message));
         console.log(message);
     }
 
-    private static textDecoder: TextDecoder = new TextDecoder("utf-8");
+    private static textDecoder: TextDecoder = new TextDecoder("ascii");
 
     protected start(): HelloTransformer {
-        // TODO: find a better way to declare methods imported from WebAssembly.
-        // For now, this is done with a static cast.
-        this.instanceTask = <Promise<HelloTransformerInstance>>
-            WebAssembly.instantiate(this.module, this.imports);
+        this.instanceTask = WebAssembly.instantiate(this.module, this.imports) as Promise<HelloTransformerInstance>;
         return this;
     }
 
@@ -75,12 +66,8 @@ export default class HelloTransformer extends ITransformer {
      * 
      * @returns Promise which resolves to the WebAssembly module's message.
      */
-    public async sayHello(): Promise<string> {
+    public async sayHello(): Promise<void> {
         const instance = await this.instanceTask;
-
-        return new Promise((resolve: (val: string) => void) => {
-            this.eventList.push(resolve);
-            instance.exports.say_hello();
-        });
+        instance.exports.say_hello();
     }
 }
