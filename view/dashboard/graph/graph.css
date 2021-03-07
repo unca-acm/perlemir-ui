@@ -1,21 +1,33 @@
+.ui-graph-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .ui-graph {
-    background-color: whitesmoke;
+    align-self: center;
 }
 
-.ui-graph .ui-graph-path {
+.ui-graph > .ui-graph-path {
     fill: none;
-    stroke-width: 1.5px;
-    stroke: crimson;
+    stroke-width: 1px;
+    stroke: white;
+}
+.ui-graph > .ui-graph-axis {
+    color: white;
 }
 
-.price-indicator-text {
-    display: inline;
+.ui-graph-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.ui-graph-controls > .ui-text {
     color: white;
+    flex: 4 1 auto;
     font-family: 'sans-serif';
     font-size: 16pt;
 }
-
-#button {
+.ui-graph-controls > .ui-button {
     background-color: #1fb8ab;
     color: white;
     margin-left: 200px;

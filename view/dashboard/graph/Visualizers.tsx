@@ -17,7 +17,7 @@ interface PriceVisualizerProps {
 const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Element {
     const { priceData } = props;
     const { plotSize } = props;
-    const [price, setPrice] = React.useState(0.0);
+    const [price, setPrice] = React.useState<number>(0.0);
 
     // React and D3.js both operate over the DOM, which creates conflicts.
     // As such, the "canvas" should be modified using a handle (ref).
@@ -81,19 +81,21 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 .data([ priceData.data ])
                 .enter()
                 .append("g")
+                .attr("class", "ui-graph-axis")
                 .call(axisX);
             graphAxes
                 .data([ priceData.domain ])
                 .enter()
                 .append("g")
+                .attr("class", "ui-graph-axis")
                 .call(axisY);
             
             // If the user's mouse is currently pointing into the graph, illustrate the point.
             const point = canvas.createSVGPoint();
             const handleMouseOver = function(data) {
+                // Copy the mouse point over to our "universal" point, temporarily.
                 point.x = data.x;
-                point.y = scaleX.invert(point.x);
-                // price = data.y;
+                point.y = data.y;
 
                 // Calculate the mouse position; however, the "y" position is not final.
                 // The "y" position needs to follow the graph, so we calculate it afterward.
@@ -101,19 +103,20 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                 const mousePosition = point.matrixTransform(canvas.getScreenCTM().inverse());
 
                 // Calculate the "true" y-coordinate, which is the price value at x.
-                const dataValue = priceData.data[mousePosition.y.toFixed(0)];
-                // Scale it to match the size of the canvas.
+                // Use the relative x-position as the index.
+                const priceIndex = scaleX.invert(mousePosition.x).toFixed(0);
+                // Sets to 0.0 if undefined (i.e. priceIndex is out of bounds).
+                const dataValue = priceData.data[priceIndex] || 0.0;
                 mousePosition.y = scaleY(dataValue);
 
+                // Draw the new circle at the calculated mouse position.
                 // Old circles are removed; this prevents having a "trail" of circles.
                 graph.selectAll("circle").remove();
-                const formatPrice = dataValue.toFixed(2)
-                // Draw the new circle at the calculated mouse position.
                 graph.append("circle")
                     .attr("cx", mousePosition.x)
                     .attr("cy", mousePosition.y)
                     .attr("r", 4);
-                setPrice(formatPrice);
+                setPrice(dataValue);
             }
 
             // Remove any remaining circles after the mouse leaves.
@@ -134,11 +137,13 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
     }, [ canvasHandle, priceData, price ]);
 
     return (
-        <div>
-            <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
+        <div className="ui-graph-container">
+            <svg className="ui-graph" ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
             <br></br>
-            <p className="price-indicator-text">Price: ${price}</p>
-            <Button size="md" id="button">Pump it!</Button>
+            <div className="ui-graph-controls">
+                <p className="ui-text">Price: ${price.toFixed(2)}</p>
+                <Button className="ui-button" size="md">Pump it!</Button>
+            </div>
         </div>
     );
 };
