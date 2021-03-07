@@ -4,6 +4,7 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { extent } from 'd3-array';
 import { line } from 'd3-shape';
 import { axisBottom, axisRight } from 'd3-axis';
+import { Button } from "@chakra-ui/react";
 
 import { BaseData, DataBlock } from "../../data/types";
 import './graph.css';
@@ -16,7 +17,7 @@ interface PriceVisualizerProps {
 const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Element {
     const { priceData } = props;
     const { plotSize } = props;
-    const [price, setPrice] = React.useState("");
+    const [price, setPrice] = React.useState(0.0);
 
     // React and D3.js both operate over the DOM, which creates conflicts.
     // As such, the "canvas" should be modified using a handle (ref).
@@ -112,12 +113,13 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
                     .attr("cx", mousePosition.x)
                     .attr("cy", mousePosition.y)
                     .attr("r", 4);
-                setPrice(`$${formatPrice}`);
+                setPrice(formatPrice);
             }
 
             // Remove any remaining circles after the mouse leaves.
             const handleMouseOut = function() {
                 graph.selectAll("circle").remove();
+                setPrice(0.0);
             }
 
             // Attach handlers based on mouse events.
@@ -133,10 +135,10 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
 
     return (
         <div>
-        <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
-        
-        <br></br>
-        Price:{price}<button id="button">Pump it!</button>
+            <svg className={"ui-graph"} ref={canvasHandle} width={plotSize.width} height={plotSize.height}></svg>
+            <br></br>
+            <p className="price-indicator-text">Price: ${price}</p>
+            <Button size="md" id="button">Pump it!</Button>
         </div>
     );
 };
