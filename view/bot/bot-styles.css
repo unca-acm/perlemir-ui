@@ -2,9 +2,9 @@
     display: flex;
     padding: 1rem;
     flex-direction: column;
-    background-color: #FFFFFF48;
     border-radius: 2rem 0.2rem 2rem 0.2rem;
-    min-height: 16rem;
+    min-height: 8rem;
+    margin: 10px;
 }
 
 .bot-card-header {
@@ -15,12 +15,27 @@
 }
 
 .bot-card-header-id {
-    color: pink;
     flex: 4 1 auto;
 }
 .bot-card-header-currency {
-    color: lightblue;
     display: flex;
     flex-direction: row-reverse;
     align-items:flex-start;
+}
+
+.bot-card-interface-group {
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: row;
+}
+.bot-card-interface-group > .bot-card-interface {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+.bot-card-interface.align-left {
+    align-items: flex-start;
+}
+.bot-card-interface.align-right {
+    align-items: flex-end;
 }

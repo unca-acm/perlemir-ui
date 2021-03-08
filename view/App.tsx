@@ -13,7 +13,7 @@ const App: React.FC = function() {
 
     return (
         <ChakraProvider resetCSS={false} theme={appTheme}>
-            <Grid backgroundColor="perlemirBrand.300" id="app-grid" gap={"1em"} templateColumns={"60% 40%"}>
+            <Grid backgroundColor="white" id="app-grid" gap={"1em"} templateColumns={"60% 40%"}>
                 <DataStore>
                     <DataView>
                         {({ dataBlock }) => (
