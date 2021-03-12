@@ -9,3 +9,10 @@ export const enum BotStatus {
     PAUSED  = 1,
     STOPPED = 2,
 }
+
+export interface BotInstance {
+    id: string;
+    name: string;
+    currency: BotCurrency;
+    status: BotStatus;
+}

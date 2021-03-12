@@ -1,12 +1,8 @@
 import React from 'react';
-import { BotCurrency, BotStatus } from '../types';
-import { Divider, Button, Box, propNames } from "@chakra-ui/react";
+import {BotCurrency, BotInstance, BotStatus} from '../types';
+import {Box, Button, Divider} from "@chakra-ui/react";
 
-type CardInterfaceProps = any;
-
-interface BotInstanceCardProps {
-    name: string;
-}
+type BotInstanceCardProps = BotInstance;
 
 interface StatusButtonProps {
     status?: BotStatus;
@@ -59,28 +55,26 @@ const StatusButton: React.FC<StatusButtonProps> = function(props) {
 };
 
 export const BotInstanceCard: React.FC<BotInstanceCardProps> = function(props) {
-    const [ botStatus, setBotStatus ] = React.useState<BotStatus>(BotStatus.RUNNING);
-
     return (
         <Box className="bot-card" bg="perlemirBrand.200">
-            <CardHeader name={props.name} currency={BotCurrency.BITCOIN} />
+            <CardHeader name={props.name} currency={props.currency} />
             <Divider orientation="horizontal" />
             <div className="bot-card-interface-group">
                 <div className="bot-card-interface align-left">
                     <StatusButton
-                        status={botStatus}
-                        onSelect={status => setBotStatus(status)}>
+                        status={props.status}
+                        onSelect={() => null}>
                         {[
                             "Running",
                             "Paused",
                             "Stopped",
-                        ][botStatus]}
+                        ][props.status]}
                     </StatusButton>
                     <h1>Amount: $0</h1>
                     <h1>Every 2 weeks</h1>
                 </div>
                 <div className="bot-card-interface align-right">
-                    <h1>ID: 1234-abc</h1>
+                    <h1>ID: {props.id}</h1>
                 </div>
             </div>
         </Box>

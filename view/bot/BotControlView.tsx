@@ -3,18 +3,24 @@ import { Box } from "@chakra-ui/react";
 
 import { BotInstanceCard } from "./card/BotInstance";
 import "./bot-styles.css";
+import {BotInstance} from "./types";
 
-type BotControlViewProps = any;
+interface BotControlViewProps {
+    instances: { [botId: string]: BotInstance };
+}
 
-const BotControlView: React.FC<BotControlViewProps> = function() {
+const BotControlView: React.FC<BotControlViewProps> = function(props) {
     return (
         <Box w="100%" p={4} color="white">
-            <BotInstanceCard
-                name="My First Crypto Bot"/>
-            <BotInstanceCard
-                name="My Second Crypto Bot"/>
-            <BotInstanceCard
-                name="My Third Crypto Bot"/>
+            {Object.values(props.instances).map(instance => (
+                <BotInstanceCard
+                    id={instance.id}
+                    key={instance.id}
+                    name={instance.name}
+                    currency={instance.currency}
+                    status={instance.status}
+                />
+            ))}
         </Box>
     );
 };
