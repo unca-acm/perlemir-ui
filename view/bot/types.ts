@@ -15,6 +15,8 @@ export interface BotInstance {
     name: string;
     currency: BotCurrency;
     status: BotStatus;
+    // TODO: represent this in a more type-safe way
+    settings?: any;
 }
 
 export interface BotContext {

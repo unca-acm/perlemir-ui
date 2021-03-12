@@ -3,6 +3,7 @@ import { BotCurrency, BotInstance, BotStatus, BotContext } from '../types';
 import {Box, Button, Divider} from "@chakra-ui/react";
 
 interface BotInstanceCardProps {
+    name: string;
     instance: BotInstance;
     context: BotContext;
 }
@@ -75,7 +76,7 @@ export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instan
                     </StatusButton>
                 </div>
                 <div className="bot-card-interface align-right">
-                    <h1>ID: {instance.id}</h1>
+                    <h1>{props.name}</h1>
                 </div>
             </div>
 
@@ -85,3 +86,15 @@ export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instan
         </Box>
     );
 };
+
+export const withInstanceCard = function<T>(
+    BotControls: React.FC<T>, botTypeName: string): React.FC<T & BotInstanceCardProps> {
+
+    return function(props) {
+        return (
+            <BotInstanceCard instance={props.instance} context={props.context} name={botTypeName}>
+                <BotControls {...props} />
+            </BotInstanceCard>
+        )
+    }
+}
