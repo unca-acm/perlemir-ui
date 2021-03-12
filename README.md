@@ -5,23 +5,6 @@ Web app for the user-level dashboard and application.
 
 Wraps around the bot's API and configuration to provide a simple, out-of-the-box experience using the bot.
 
-### TODO
-
-(See GitHub Projects tab for details)
-
-- [ ] Basic interactive UI
-    - [ ] Basic navbar
-    - [ ] Visual graph (Plotly.js? D3.js? WebGL?)
-    - [ ] Interactive elements (buttons, forms, sliders, etc)
-- [X] Build pipeline for transform library
-    - [X] Makefile/CMake/etc., along with LLVM compiler flags
-        - `--import-memory`, `--export-all`, etc
-    - [X] Publish as NPM package (include as dependency)
-    - [X] Integrate WASI?
-- [X] Data component for JavaScript
-    - [ ] Interface for UI to pull from and query against
-    - [X] Include transform library
-
 ### Layout
 
 The code base is split into three parts: the web client, math library, and server.
@@ -29,8 +12,6 @@ The code base is split into three parts: the web client, math library, and serve
 This project uses TypeScript + React to power the front end, and Express.js for the back end*. Additionally, for the front end, it is "bundled" using Snowpack to ensure high performance and a better user experience with a lightweight bundler.
 
 Additionally, the front end depends heavily on mathematical computations on large data sets representing financial data. This is handled using a math library written in C and compiled to WebAssembly using LLVM.
-
-###### *Role of back end is TBD and will not be a part of the MVP
 
 #### Client
 
@@ -49,8 +30,6 @@ These are intended to be bundled/exported as an NPM package, which makes it easi
 Optionally, if developing for the transform library itself, you may use the local copy of the transform library.
 
 #### Server
-
-`NOTE: server architecture is TBD`
 
 Source code for the server can be found under `src`.
 
