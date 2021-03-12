@@ -142,7 +142,7 @@ const PriceVisualizer: React.FC<PriceVisualizerProps> = function(props): JSX.Ele
             <br></br>
             <div className="ui-graph-controls">
                 <p className="ui-text">Price: ${price.toFixed(2)}</p>
-                <Button className="ui-button" size="md">Pump it!</Button>
+                <Button className="ui-button" size="md">Click to Die Instantly</Button>
             </div>
         </div>
     );

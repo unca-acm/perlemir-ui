@@ -1,8 +1,11 @@
 import React from 'react';
-import {BotCurrency, BotInstance, BotStatus} from '../types';
+import { BotCurrency, BotInstance, BotStatus, BotContext } from '../types';
 import {Box, Button, Divider} from "@chakra-ui/react";
 
-type BotInstanceCardProps = BotInstance;
+interface BotInstanceCardProps {
+    instance: BotInstance;
+    context: BotContext;
+}
 
 interface StatusButtonProps {
     status?: BotStatus;
@@ -54,28 +57,30 @@ const StatusButton: React.FC<StatusButtonProps> = function(props) {
     );
 };
 
-export const BotInstanceCard: React.FC<BotInstanceCardProps> = function(props) {
+export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instance, context, ...props}) {
     return (
         <Box className="bot-card" bg="perlemirBrand.200">
-            <CardHeader name={props.name} currency={props.currency} />
+            <CardHeader name={instance.name} currency={instance.currency} />
             <Divider orientation="horizontal" />
             <div className="bot-card-interface-group">
                 <div className="bot-card-interface align-left">
                     <StatusButton
-                        status={props.status}
-                        onSelect={() => null}>
+                        status={instance.status}
+                        onSelect={status => context.updateBotInstance({ status })}>
                         {[
                             "Running",
                             "Paused",
                             "Stopped",
-                        ][props.status]}
+                        ][instance.status]}
                     </StatusButton>
-                    <h1>Amount: $0</h1>
-                    <h1>Every 2 weeks</h1>
                 </div>
                 <div className="bot-card-interface align-right">
-                    <h1>ID: {props.id}</h1>
+                    <h1>ID: {instance.id}</h1>
                 </div>
+            </div>
+
+            <div className={"bot-card-interface-group"}>
+                {props.children}
             </div>
         </Box>
     );

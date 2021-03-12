@@ -7,8 +7,8 @@ export const ExampleBotInstances: { [id: string]: BotInstance } = {
         currency: BotCurrency.BITCOIN,
         status: BotStatus.RUNNING,
     },
-    "123-bcd": {
-        id: "123-bcd",
+    "923-bcd": {
+        id: "923-bcd",
         name: "My Second Bot",
         currency: BotCurrency.ETHER,
         status: BotStatus.RUNNING,

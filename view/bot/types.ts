@@ -16,3 +16,7 @@ export interface BotInstance {
     currency: BotCurrency;
     status: BotStatus;
 }
+
+export interface BotContext {
+    updateBotInstance: (updated: Partial<BotInstance>) => void;
+}
