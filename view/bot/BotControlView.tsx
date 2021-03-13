@@ -2,6 +2,7 @@ import React from "react";
 import { Box } from "@chakra-ui/react";
 
 import BotCardDCA from "./card/BotCardDCA";
+import BotControlPanel from "./BotControlPanel";
 import { BotInstance, BotContext } from "./types";
 import "./bot-styles.css";
 
@@ -13,6 +14,7 @@ interface BotControlViewProps {
 const BotControlView: React.FC<BotControlViewProps> = function(props) {
     return (
         <Box w="100%" p={4} color="white">
+            <BotControlPanel />
             {Object.values(props.instances).map(instance => {
                 return (
                     <BotCardDCA
