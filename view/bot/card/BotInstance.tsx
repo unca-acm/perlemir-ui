@@ -1,11 +1,13 @@
 import React from 'react';
-import { BotCurrency, BotInstance, BotStatus, BotContext } from '../types';
+import { BotCurrency, BotInstance, BotStatus } from '../types';
 import {Box, Button, Divider} from "@chakra-ui/react";
+
+import "../bot-styles.css";
 
 interface BotInstanceCardProps {
     name: string;
     instance: BotInstance;
-    context: BotContext;
+    dispatch: (updated: Partial<BotInstance>) => void;
 }
 
 interface StatusButtonProps {
@@ -58,7 +60,7 @@ const StatusButton: React.FC<StatusButtonProps> = function(props) {
     );
 };
 
-export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instance, context, ...props}) {
+export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instance, dispatch, ...props}) {
     return (
         <Box className="bot-card" bg="perlemirBrand.200">
             <CardHeader name={instance.name} currency={instance.currency} />
@@ -67,7 +69,7 @@ export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instan
                 <div className="bot-card-interface align-left">
                     <StatusButton
                         status={instance.status}
-                        onSelect={status => context.updateBotInstance({ status })}>
+                        onSelect={status => dispatch({ status })}>
                         {[
                             "Running",
                             "Paused",
@@ -92,7 +94,7 @@ export const withInstanceCard = function<T>(
 
     return function(props) {
         return (
-            <BotInstanceCard instance={props.instance} context={props.context} name={botTypeName}>
+            <BotInstanceCard instance={props.instance} dispatch={props.dispatch} name={botTypeName}>
                 <BotControls {...props} />
             </BotInstanceCard>
         )

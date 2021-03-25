@@ -1,11 +1,11 @@
 import React from "react";
-import { Grid } from "@chakra-ui/react";
+import { Grid, Box } from "@chakra-ui/react";
 
 import { DataStore, DataView } from "../data/DataContext";
 import { PriceVisualizer } from "./graph/Visualizers";
-import BotControlView from "../bot/BotControlView";
-import { BotInstance, BotContext } from "../bot/types";
+import { BotInstance } from "../bot/types";
 import { ExampleBotInstances } from "../bot/testBots";
+import BotCardDCA from "../bot/card/BotCardDCA";
 
 interface DashboardProps {
     plotSize: { width: number, height: number };
@@ -13,22 +13,6 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = function(props) {
     const [ botInstances, setBotInstances ] = React.useState<{ [id: string]: BotInstance }>(ExampleBotInstances);
-
-    const createBotContext = function(botId: string): BotContext {
-        if (!botInstances[botId]) {
-            throw new Error(`Cannot update bot status: ${botId} not found`);
-        }
-
-        return {
-            updateBotInstance: function(updated) {
-                const { [botId]: previousInstance } = botInstances;
-                Object.assign(previousInstance, updated);
-                setBotInstances({
-                    ...botInstances,
-                });
-            },
-        };
-    }
 
     return (
         <Grid backgroundColor="white" id="app-grid" gap="1em" templateColumns="60% 40%">
@@ -42,10 +26,19 @@ const Dashboard: React.FC<DashboardProps> = function(props) {
                     )}
                 </DataView>
             </DataStore>
-            <BotControlView
-                instances={botInstances}
-                selectBot={createBotContext}
-            />
+            <Box w="100%" p={4} color="white">
+                {Object.values(botInstances).map(instance => (
+                    <BotCardDCA
+                        key={instance.id}
+                        name={instance.id}
+                        instance={instance}
+                        dispatch={val => {
+                            Object.assign(botInstances[instance.id], val);
+                            setBotInstances({ ...botInstances });
+                        }}
+                    />
+                ))}
+            </Box>
         </Grid>
     );
 };
