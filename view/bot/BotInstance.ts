@@ -1,4 +1,6 @@
 
+import { defaultOptions as DCAOpts } from "./dca/BotDCA";
+
 export enum BotCurrency {
     BITCOIN = "BTC",
     ETHER = "ETH",
@@ -26,4 +28,12 @@ export interface BotInstance<TOpt = any> {
 
 export interface BotContext {
     updateBotInstance: (updated: Partial<BotInstance>) => void;
+}
+
+export const getDefaultOptions = function(strategy: BotStrategy) {
+    switch (strategy) {
+    case BotStrategy.DCA:
+    default:
+        return DCAOpts;
+    }
 }

@@ -1,8 +1,13 @@
 import React from 'react';
-import { BotCurrency, BotInstance, BotStatus } from './types';
+import { BotCurrency, BotInstance, BotStatus } from './BotInstance';
 import {Box, Button, Divider} from "@chakra-ui/react";
 
 import "./bot-styles.css";
+
+export interface BotCreateOptionsProps<T> {
+    options: T;
+    onUpdate: (options: T) => void;
+}
 
 interface BotInstanceCardProps {
     name: string;

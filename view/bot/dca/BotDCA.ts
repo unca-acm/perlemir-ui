@@ -1,6 +1,10 @@
-import { BotInstance } from "../types";
+import { BotInstance } from "../BotInstance";
 
-export interface BotOptionsDCA {
+export interface Options {
     amount: number;
 }
-export type BotInstanceDCA = BotInstance<BotOptionsDCA>;
+export type Instance = BotInstance<Options>;
+
+export const defaultOptions: Options = {
+    amount: 0.0,
+};
