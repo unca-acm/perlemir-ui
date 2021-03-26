@@ -1,5 +1,5 @@
 import React from "react";
-import { NumberInput, NumberInputField } from "@chakra-ui/react";
+import { NumberInput, NumberInputField, FormLabel } from "@chakra-ui/react";
 
 import * as BotDCA from "./BotDCA";
 import { withInstanceCard, BotCreateOptionsProps } from "../BotInstanceCard";
@@ -27,9 +27,13 @@ export const DCACreateOptions: React.FC<OptionsProps> = function(props) {
     }
 
     return (
-        <NumberInput onChange={updateOptions} value={props.options.amount}>
-            <NumberInputField />
-        </NumberInput>
+        <div>
+            {props.children}
+            <FormLabel isRequired={false}>Amount</FormLabel>
+            <NumberInput onChange={updateOptions}>
+                <NumberInputField />
+            </NumberInput>
+        </div>
     );
 };
 

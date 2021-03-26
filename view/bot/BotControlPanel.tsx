@@ -32,7 +32,7 @@ interface BotCreateFormProps {
 }
 
 const BotCreateForm: React.FC<BotCreateFormProps> = function(props) {
-    const [ instance, setInstance ] = React.useState<BotInstance<typeof options>>({
+    const [ instance, setInstance ] = React.useState<BotInstance>({
         id: (Math.round(Math.random() * 9999999999)).toString(16),
         name: "No Name",
         currency: BotCurrency.BITCOIN,
@@ -41,35 +41,21 @@ const BotCreateForm: React.FC<BotCreateFormProps> = function(props) {
     });
     const [ options, setOptions ] = React.useState<any>(getDefaultOptions(instance.strategy));
 
+    // Select the option form based on the current strategy
+    // Currently, this is basically just an alias; update when new strategies are added
+    const InnerForm = DCACreateOptions;
+
     const strategyHandler: React.ChangeEventHandler<HTMLSelectElement> = function(ev) {
         if (ev.target.value in BotStrategy) {
-            setInstance({ ...instance, strategy: ev.target.value });
+            // Both the strategy AND options are reset to reflect the new strategy
+            // Failing to do both may result in inconsistent state
+            setInstance({ ...instance, strategy: ev.target.value as BotStrategy });
+            setOptions(getDefaultOptions(ev.target.value as BotStrategy));
         }
     };
 
     return (
         <form>
-            <FormControl>
-                <FormLabel>Bot Name</FormLabel>
-                <Input onChange={ev => setInstance({ ...instance, name: ev.target.value })} />
-            </FormControl>
-
-            <FormControl isRequired={true}>
-                <FormLabel htmlFor="bot-create-currency">Currency</FormLabel>
-                <RadioGroup
-                    onChange={text => setInstance({
-                        ...instance,
-                        currency: text as BotCurrency
-                    })}
-                    value={instance.currency}
-                >
-                    <Stack direction="row">
-                        <Radio value={BotCurrency.BITCOIN}>Bitcoin</Radio>
-                        <Radio value={BotCurrency.ETHER}>Ether</Radio>
-                    </Stack>
-                </RadioGroup>
-            </FormControl>
-
             <FormControl isRequired={true}>
                 <FormLabel htmlFor="bot-create-strategy">Investment Strategy</FormLabel>
                 <Select id="bot-create-strategy" isRequired={true} onChange={strategyHandler}>
@@ -77,10 +63,28 @@ const BotCreateForm: React.FC<BotCreateFormProps> = function(props) {
                 </Select>
             </FormControl>
 
-            <FormControl>
-                <FormLabel>Settings ({instance.strategy})</FormLabel>
-                <DCACreateOptions onUpdate={opt => setOptions(opt)} options={options} />
-            </FormControl>
+            <InnerForm options={options} onUpdate={opts => setOptions(opts)}>
+                <FormControl>
+                    <FormLabel>Bot Name</FormLabel>
+                    <Input onChange={ev => setInstance({ ...instance, name: ev.target.value })} />
+                </FormControl>
+
+                <FormControl isRequired={true}>
+                    <FormLabel htmlFor="bot-create-currency">Currency</FormLabel>
+                    <RadioGroup
+                        onChange={text => setInstance({
+                            ...instance,
+                            currency: text as BotCurrency
+                        })}
+                        value={instance.currency}
+                    >
+                        <Stack direction="row">
+                            <Radio value={BotCurrency.BITCOIN}>Bitcoin</Radio>
+                            <Radio value={BotCurrency.ETHER}>Ether</Radio>
+                        </Stack>
+                    </RadioGroup>
+                </FormControl>
+            </InnerForm>
 
             <Button onClick={() => props.onSubmit({ ...instance, options })}>Submit</Button>
         </form>

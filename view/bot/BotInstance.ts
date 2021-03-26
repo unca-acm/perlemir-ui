@@ -20,7 +20,7 @@ export const enum BotStatus {
 export interface BotInstance<TOpt = any> {
     id: string;
     name: string;
-    strategy: string;
+    strategy: BotStrategy;
     currency: BotCurrency;
     status: BotStatus;
     options?: TOpt;
