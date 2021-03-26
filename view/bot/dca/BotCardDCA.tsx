@@ -1,6 +1,6 @@
 import React from "react";
 
-import { withInstanceCard } from "./BotInstance";
+import { withInstanceCard } from "../BotInstance";
 import { BotInstance } from "../types";
 
 export interface BotCardDCA {
@@ -12,7 +12,7 @@ interface DCAInstance {
 }
 
 const BotCardDCA: React.FC<BotCardDCA> = function(props) {
-    const instance = props.instance.settings as DCAInstance;
+    const instance = props.instance.options as DCAInstance;
     return (
         <div>
             <h1>Amount: ${instance.amount}</h1>

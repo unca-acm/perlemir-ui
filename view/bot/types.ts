@@ -1,7 +1,11 @@
 
-export const enum BotCurrency {
+export enum BotCurrency {
     BITCOIN = "BTC",
     ETHER = "ETH",
+}
+
+export enum BotStrategy {
+    DCA = "Dollar-Cost Average",
 }
 
 export const enum BotStatus {
@@ -10,13 +14,14 @@ export const enum BotStatus {
     STOPPED = 2,
 }
 
-export interface BotInstance {
+// TODO: represent this in a more type-safe way
+export interface BotInstance<TOpt = any> {
     id: string;
     name: string;
+    strategy: string;
     currency: BotCurrency;
     status: BotStatus;
-    // TODO: represent this in a more type-safe way
-    settings?: any;
+    options?: TOpt;
 }
 
 export interface BotContext {

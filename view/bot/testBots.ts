@@ -1,4 +1,4 @@
-import {BotCurrency, BotInstance, BotStatus} from "./types";
+import {BotCurrency, BotInstance, BotStatus, BotStrategy} from "./types";
 
 export const ExampleBotInstances: { [id: string]: BotInstance } = {
     "123-abc": {
@@ -6,7 +6,8 @@ export const ExampleBotInstances: { [id: string]: BotInstance } = {
         name: "My First Bot",
         currency: BotCurrency.BITCOIN,
         status: BotStatus.RUNNING,
-        settings: {
+        strategy: BotStrategy.DCA,
+        options: {
             amount: 2.14,
         }
     },
@@ -15,7 +16,8 @@ export const ExampleBotInstances: { [id: string]: BotInstance } = {
         name: "My Second Bot",
         currency: BotCurrency.ETHER,
         status: BotStatus.RUNNING,
-        settings: {
+        strategy: BotStrategy.DCA,
+        options: {
             amount: 3.99,
         }
     },
@@ -24,7 +26,8 @@ export const ExampleBotInstances: { [id: string]: BotInstance } = {
         name: "My Third Bot",
         currency: BotCurrency.BITCOIN,
         status: BotStatus.RUNNING,
-        settings: {
+        strategy: BotStrategy.DCA,
+        options: {
             amount: 10.41,
         }
     }

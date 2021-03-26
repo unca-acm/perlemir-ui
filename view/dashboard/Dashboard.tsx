@@ -5,7 +5,8 @@ import { DataStore, DataView } from "../data/DataContext";
 import { PriceVisualizer } from "./graph/Visualizers";
 import { BotInstance } from "../bot/types";
 import { ExampleBotInstances } from "../bot/testBots";
-import BotCardDCA from "../bot/card/BotCardDCA";
+import BotControlPanel from "../bot/BotControlPanel";
+import BotCardDCA from "../bot/dca/BotCardDCA";
 
 interface DashboardProps {
     plotSize: { width: number, height: number };
@@ -27,6 +28,18 @@ const Dashboard: React.FC<DashboardProps> = function(props) {
                 </DataView>
             </DataStore>
             <Box w="100%" p={4} color="white">
+                <BotControlPanel
+                    onCreate={instance => {
+                        setBotInstances({ [instance.id]: instance, ...botInstances });
+                    }}
+                    onDelete={botId => {
+                        if (!botInstances[botId]) {
+                            return;
+                        }
+                        delete botInstances[botId];
+                        setBotInstances({ ...botInstances });
+                    }}
+                />
                 {Object.values(botInstances).map(instance => (
                     <BotCardDCA
                         key={instance.id}

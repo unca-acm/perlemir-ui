@@ -1,8 +1,8 @@
 import React from 'react';
-import { BotCurrency, BotInstance, BotStatus } from '../types';
+import { BotCurrency, BotInstance, BotStatus } from './types';
 import {Box, Button, Divider} from "@chakra-ui/react";
 
-import "../bot-styles.css";
+import "./bot-styles.css";
 
 interface BotInstanceCardProps {
     name: string;
