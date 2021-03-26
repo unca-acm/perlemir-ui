@@ -4,8 +4,8 @@
   "description": "Proof-of-concept for the front-end UI of market bot",
   "main": "dist/app.js",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node dist/app.js\"",
-    "start:ui": "snowpack dev",
+    "start": "snowpack dev",
+    "start:lib": "tsc-watch --onSuccess \"node dist/app.js\"",
     "build": "tsc && snowpack build",
     "lint": "eslint --fix --ext .ts,.js ./{src,view}",
     "clean": "rm -rf node_modules/ dist/ public/",

@@ -25,6 +25,7 @@ module.exports = {
     },
     devOptions: {
         open: 'none',
+        port: 8000,
     },
     buildOptions: {
         out: 'public',
