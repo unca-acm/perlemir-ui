@@ -11,86 +11,81 @@ import {
     DrawerHeader,
     FormControl,
     FormLabel,
-    Stack,
-    Radio,
-    RadioGroup,
-    Input,
     Select
 } from "@chakra-ui/react";
 
-import { BotCurrency, BotInstance, BotStatus, BotStrategy, getDefaultOptions } from "./BotInstance";
-import { DCACreateOptions } from "./dca/BotCardDCA";
-
-interface BotControlPanelProps {
-    onCreate: (instance: BotInstance) => void;
-    onDelete: (botId: string) => void;
-}
+import { BotInstance, BotStrategy } from "./BotInstance";
+import { DCACustomForm } from "./dca/BotCardDCA";
 
 type BotCreateEvent = (instance: BotInstance) => void;
 interface BotCreateFormProps {
+    /**
+     * Callback to be run when the entered data is ready to be submitted to the server.
+     * 
+     * @param instance Valid, newly-created bot instance record, representing a bot
+     *   to be created on the server.
+     */
     onSubmit: (instance: BotInstance) => void;
 }
 
 const BotCreateForm: React.FC<BotCreateFormProps> = function(props) {
-    const [ instance, setInstance ] = React.useState<BotInstance>({
-        id: (Math.round(Math.random() * 9999999999)).toString(16),
-        name: "No Name",
-        currency: BotCurrency.BITCOIN,
-        status: BotStatus.PAUSED,
-        strategy: BotStrategy.DCA,
-    });
-    const [ options, setOptions ] = React.useState<any>(getDefaultOptions(instance.strategy));
-
-    // Select the option form based on the current strategy
-    // Currently, this is basically just an alias; update when new strategies are added
-    const InnerForm = DCACreateOptions;
-
+    const [ strategy, setStrategy ] = React.useState<BotStrategy>(BotStrategy.DCA);
     const strategyHandler: React.ChangeEventHandler<HTMLSelectElement> = function(ev) {
         if (ev.target.value in BotStrategy) {
-            // Both the strategy AND options are reset to reflect the new strategy
-            // Failing to do both may result in inconsistent state
-            setInstance({ ...instance, strategy: ev.target.value as BotStrategy });
-            setOptions(getDefaultOptions(ev.target.value as BotStrategy));
+            setStrategy(ev.target.value as BotStrategy);
         }
     };
 
+    // Selects the appropriate custom form based on what strategy is specified.
+    // Memoized so that this selection process only occurs when the strategy is changed.
+    const StrategyForm = React.useMemo(function() {
+        switch (strategy) {
+        case BotStrategy.DCA:
+        default:
+            return DCACustomForm;
+        }
+    }, [ strategy ]);
+
     return (
-        <form>
+        <StrategyForm onSubmit={instance => props.onSubmit(instance)}>
             <FormControl isRequired={true}>
                 <FormLabel htmlFor="bot-create-strategy">Investment Strategy</FormLabel>
                 <Select id="bot-create-strategy" isRequired={true} onChange={strategyHandler}>
                     <option value="strategy=DCA">Dollar-Cost Average</option>
                 </Select>
             </FormControl>
-
-            <InnerForm options={options} onUpdate={opts => setOptions(opts)}>
-                <FormControl>
-                    <FormLabel>Bot Name</FormLabel>
-                    <Input onChange={ev => setInstance({ ...instance, name: ev.target.value })} />
-                </FormControl>
-
-                <FormControl isRequired={true}>
-                    <FormLabel htmlFor="bot-create-currency">Currency</FormLabel>
-                    <RadioGroup
-                        onChange={text => setInstance({
-                            ...instance,
-                            currency: text as BotCurrency
-                        })}
-                        value={instance.currency}
-                    >
-                        <Stack direction="row">
-                            <Radio value={BotCurrency.BITCOIN}>Bitcoin</Radio>
-                            <Radio value={BotCurrency.ETHER}>Ether</Radio>
-                        </Stack>
-                    </RadioGroup>
-                </FormControl>
-            </InnerForm>
-
-            <Button onClick={() => props.onSubmit({ ...instance, options })}>Submit</Button>
-        </form>
+        </StrategyForm>
     );
 };
 
+interface BotControlPanelProps {
+    /**
+     * Callback for creating new bot instances and making them available globally.
+     * The new bot will be reflected on the server, and then updated locally.
+     * 
+     * @param instance Valid, newly-created bot instance record, representing a bot
+     *   to be created on the server.
+     */
+    onCreate: (instance: BotInstance) => void;
+
+    /**
+     * Callback for deleting existing bot instances.
+     * The selected bot will be removed from the server, and then removed locally.
+     * 
+     * If the specified bot is invalid or does not exist, no changes occur.
+     * 
+     * @param botId Identifier of the bot instance to delete.
+     */
+    onDelete: (botId: string) => void;
+}
+
+/**
+ * Control panel which is used to perform general actions on the group of bots.
+ * Typically used for general actions like creating, deleting, or reading values from all bots.
+ * 
+ * Contains an "overlay" when buttons are pressed.
+ * When the Create button is pressed, a Bot Create form is displayed.
+ */
 const BotControlPanel: React.FC<BotControlPanelProps> = function(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const buttonHandle = React.useRef();

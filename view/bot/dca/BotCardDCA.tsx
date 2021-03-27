@@ -2,8 +2,9 @@ import React from "react";
 import { NumberInput, NumberInputField, FormLabel } from "@chakra-ui/react";
 
 import * as BotDCA from "./BotDCA";
-import { withInstanceCard, BotCreateOptionsProps } from "../BotInstanceCard";
-import { BotInstance } from "../BotInstance";
+import { withCustomForm, CustomFormOptions } from "../BotCustomForm";
+import { withInstanceCard } from "../BotInstanceCard";
+import { BotInstance, BotStrategy } from "../BotInstance";
 
 export interface BotCardDCA {
     instance: BotInstance;
@@ -19,8 +20,7 @@ const BotCardDCA: React.FC<BotCardDCA> = function(props) {
 };
 
 
-type OptionsProps = BotCreateOptionsProps<BotDCA.Options>;
-export const DCACreateOptions: React.FC<OptionsProps> = function(props) {
+const DCACreateOptions: CustomFormOptions<BotDCA.Options> = function(props) {
 
     const updateOptions = function(s: string, num: number) {
         props.onUpdate({ ...props.options, amount: !isNaN(num) ? num : 0 });
@@ -37,4 +37,5 @@ export const DCACreateOptions: React.FC<OptionsProps> = function(props) {
     );
 };
 
+export const DCACustomForm = withCustomForm(DCACreateOptions, BotStrategy.DCA, { amount: 0.0 });
 export default withInstanceCard(BotCardDCA, "Dollar-Cost Average");
