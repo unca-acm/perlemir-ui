@@ -64,7 +64,7 @@ export const withCustomForm = function<T>(
     initialOptions: T
 ): CustomForm<T> {
     return function CustomFormComponent(props) {
-        const [ instance, setInstance ] = React.useState<BotInstance>({
+        const [ instance, setInstance ] = React.useState<BotInstance<T>>({
             id: (Math.round(Math.random() * 9999999999)).toString(16),
             name: "No Name",
             currency: BotCurrency.BITCOIN,

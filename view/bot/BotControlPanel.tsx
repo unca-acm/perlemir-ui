@@ -17,7 +17,7 @@ import {
 import { BotInstance, BotStrategy } from "./BotInstance";
 import { DCACustomForm } from "./dca/BotCardDCA";
 
-type BotCreateEvent = (instance: BotInstance) => void;
+type BotCreateEvent = (instance: BotInstance<unknown>) => void;
 interface BotCreateFormProps {
     /**
      * Callback to be run when the entered data is ready to be submitted to the server.
@@ -25,7 +25,7 @@ interface BotCreateFormProps {
      * @param instance Valid, newly-created bot instance record, representing a bot
      *   to be created on the server.
      */
-    onSubmit: (instance: BotInstance) => void;
+    onSubmit: BotCreateEvent;
 }
 
 const BotCreateForm: React.FC<BotCreateFormProps> = function(props) {
@@ -66,17 +66,7 @@ interface BotControlPanelProps {
      * @param instance Valid, newly-created bot instance record, representing a bot
      *   to be created on the server.
      */
-    onCreate: (instance: BotInstance) => void;
-
-    /**
-     * Callback for deleting existing bot instances.
-     * The selected bot will be removed from the server, and then removed locally.
-     * 
-     * If the specified bot is invalid or does not exist, no changes occur.
-     * 
-     * @param botId Identifier of the bot instance to delete.
-     */
-    onDelete: (botId: string) => void;
+    onCreate: BotCreateEvent;
 }
 
 /**

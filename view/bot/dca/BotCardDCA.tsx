@@ -3,14 +3,14 @@ import { NumberInput, NumberInputField, FormLabel } from "@chakra-ui/react";
 
 import * as BotDCA from "./BotDCA";
 import { withCustomForm, CustomFormOptions } from "../BotCustomForm";
-import { withInstanceCard } from "../BotInstanceCard";
-import { BotInstance, BotStrategy } from "../BotInstance";
+import { withInstanceCard, BotCardOptionsComponent } from "../BotInstanceCard";
+import { BotStrategy } from "../BotInstance";
 
-export interface BotCardDCA {
-    instance: BotInstance;
+export interface BotCardDCAProps {
+    instance: BotDCA.Instance;
 }
 
-const BotCardDCA: React.FC<BotCardDCA> = function(props) {
+const BotCardDCA: BotCardOptionsComponent<BotDCA.Options> = function(props) {
     const instance = props.instance.options as BotDCA.Options;
     return (
         <div>

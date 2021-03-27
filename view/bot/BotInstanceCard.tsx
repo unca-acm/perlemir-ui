@@ -4,12 +4,6 @@ import {Box, Button, Divider} from "@chakra-ui/react";
 
 import "./bot-styles.css";
 
-interface BotInstanceCardProps {
-    name: string;
-    instance: BotInstance;
-    dispatch: (updated: Partial<BotInstance>) => void;
-}
-
 interface StatusButtonProps {
     status?: BotStatus;
     onSelect?: (selection: BotStatus) => void;
@@ -60,43 +54,50 @@ const StatusButton: React.FC<StatusButtonProps> = function(props) {
     );
 };
 
-export const BotInstanceCard: React.FC<BotInstanceCardProps> = function({ instance, dispatch, ...props}) {
-    return (
-        <Box className="bot-card" bg="perlemirBrand.200">
-            <CardHeader name={instance.name} currency={instance.currency} />
-            <Divider orientation="horizontal" />
-            <div className="bot-card-interface-group">
-                <div className="bot-card-interface align-left">
-                    <StatusButton
-                        status={instance.status}
-                        onSelect={status => dispatch({ status })}>
-                        {[
-                            "Running",
-                            "Paused",
-                            "Stopped",
-                        ][instance.status]}
-                    </StatusButton>
-                </div>
-                <div className="bot-card-interface align-right">
-                    <h1>{props.name}</h1>
-                </div>
-            </div>
 
-            <div className={"bot-card-interface-group"}>
-                {props.children}
-            </div>
-        </Box>
-    );
-};
+/* :::::::::::::::::::::::::::::::::
+ * ::: Library Types and Methods :::
+ * ::::::::::::::::::::::::::::::::: */
+
+export type BotCardOptionsComponent<T> = React.FC<{
+    instance: BotInstance<T>;
+}>;
+
+export type BotInstanceCard<T> = React.FC<{
+    instance: BotInstance<T>;
+    dispatch: (updated: Partial<BotInstance<T>>) => void;
+}>;
 
 export const withInstanceCard = function<T>(
-    BotControls: React.FC<T>, botTypeName: string): React.FC<T & BotInstanceCardProps> {
-
-    return function(props) {
+    BotControls: BotCardOptionsComponent<T>,
+    botTypeName: string
+): BotInstanceCard<T> {
+    return function({ dispatch, ...props }) {
         return (
-            <BotInstanceCard instance={props.instance} dispatch={props.dispatch} name={botTypeName}>
-                <BotControls {...props} />
-            </BotInstanceCard>
+            <Box className="bot-card" bg="perlemirBrand.200">
+                <CardHeader name={botTypeName} currency={props.instance.currency} />
+                <Divider orientation="horizontal" />
+                <div className="bot-card-interface-group">
+                    <div className="bot-card-interface align-left">
+                        <StatusButton
+                            status={props.instance.status}
+                            onSelect={status => dispatch({ status })}>
+                            {[
+                                "Running",
+                                "Paused",
+                                "Stopped",
+                            ][props.instance.status]}
+                        </StatusButton>
+                    </div>
+                    <div className="bot-card-interface align-right">
+                        <h1>{botTypeName}</h1>
+                    </div>
+                </div>
+
+                <div className={"bot-card-interface-group"}>
+                    <BotControls {...props} />
+                </div>
+            </Box>
         )
     }
 }
